@@ -119,7 +119,10 @@ void update_enemy_pos_straight(t_table *table)
 
 	printf("Relative: x = %f, y = %f\n", relative_x, relative_y);
 	printf("Screen: x = %d\n", screen_x);
+	printf("Enemy is on view %d \n", table->enemy_is_on_field_of_view == 0);
 
+	if (table->enemy_is_on_field_of_view == 0)
+		return ;
 
     // Tarkista, onko vihollinen ruudulla
     if (screen_x < 0 || screen_x >= table->width) {
@@ -165,9 +168,16 @@ void update_enemy_pos_straight(t_table *table)
     int screen_x = (int)((relative_angle / fov) * (table->width / 2)) + (table->width / 2);
 
     // Tarkista, onko vihollinen näkyvissä
-    if (screen_x < 0 || screen_x >= table->width) {
+    if (screen_x < 0 || screen_x >= table->width)
+	{
         printf("Enemy is out of view.\n");
+		table->enemy_is_on_field_of_view = 0;
     }
+	else
+	{
+		printf("Enemy is in view. \n");
+		table->enemy_is_on_field_of_view = 1;
+	}
 
     // Päivitä vihollisen sprite
     int i = 4;

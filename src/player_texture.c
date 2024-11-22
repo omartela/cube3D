@@ -86,7 +86,7 @@ int	insert_enemy_images(t_table *table)
 	base_y = table->height / 2;// - 130;
 	while (i >= 0)
 	{
-		mlx_resize_image(table->e_img[i], 200 + (i * 20), 200 + (i * 20));
+		mlx_resize_image(table->e_img[i], 100 + (i * 20), 100 + (i * 20));
 		mlx_image_to_window(table->mlx_start, table->e_img[i], 0, 0);
 		if (i != 0)
 			table->e_img[i]->instances[0].enabled = false;
@@ -110,7 +110,6 @@ int	insert_fireball(t_table *table)
 	{
 		mlx_resize_image(table->p_img[i], 300 - (7 * table->p_anim_index), 300 - (7 * table->p_anim_index));
 		mlx_image_to_window(table->mlx_start, table->p_img[i], base_x, base_y);
-		printf("firebal depth %d \n", table->p_img[i]->instances[0].z);
 		//mlx_set_instance_depth(&table->p_img[i]->instances[0], 1);
 		if (i > 0)
 		{

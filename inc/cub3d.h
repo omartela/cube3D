@@ -58,6 +58,7 @@ typedef struct s_table
 	char			*ea_path_texture;
 	char			*we_path_texture;
 	char			*p_path_texture;
+	int				enemy_is_on_field_of_view;
 	mlx_image_t		*p_img[30];
 	mlx_image_t		*e_img[5];
 	mlx_image_t		*left_hand;
