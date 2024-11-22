@@ -52,7 +52,7 @@ int	animate_enemy(t_table *table)
 	int	i;
 
 	i = 0;
-	if (table->frame_counter % 3 == 0)
+	if (table->frame_counter % 5 == 0)
 	{
 		while (i < 5)
 		{

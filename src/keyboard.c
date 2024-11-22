@@ -83,54 +83,96 @@ void	ft_enemy(void *param)
 	t_table	*table;
 
 	table = (t_table *)param;
+	(void)table;
 	//animate_enemy(table);
 }
 
-void update_enemy_pos(t_table *table)
+void update_enemy_pos_straight(t_table *table)
 {
-    // Enemy's map position
-    float enemy_x = 3.0; // Example map coordinate (tile position)
-    float enemy_y = 1.0; // Example map coordinate (tile position)
+    // Vihollisen sijainti kartalla
+    float enemy_x = 3.0; // Kartan koordinaatit
+    float enemy_y = 1.0;
 
-    // Convert player's position from pixel space to map space
-    float player_map_x = table->player_x / T_SIZE;
-    float player_map_y = table->player_y / T_SIZE;
+    // Kameran sijainti kartalla
+    float camera_map_x = table->player_x / T_SIZE;
+    float camera_map_y = table->player_y / T_SIZE;
+	
+	printf("table->player_x %f and table->player_y %f \n", table->player_x, table->player_y);
 
-    // Calculate the enemy's position relative to the player
-    float relative_x = enemy_x - player_map_x;
-    float relative_y = enemy_y - player_map_y;
+    // Suhteellinen sijainti kameraan nähden
+    float relative_x = enemy_x - camera_map_x;
+    float relative_y = camera_map_y - enemy_y;
+	printf("Camera position: camera_map_x = %f, camera_map_y = %f\n", camera_map_x, camera_map_y);
+	printf("Enemy position: enemy_x = %f, enemy_y = %f\n", enemy_x, enemy_y);
+	printf("Relative position: relative_x = %f, relative_y = %f\n", relative_x, relative_y);
 
-    printf("Relative Position: relative_x = %f, relative_y = %f\n", relative_x, relative_y);
 
-	float angle = deg_to_rad(table->player_angle);
-    // Rotate relative position by the player's view angle
-    float rotated_x = relative_x * cos(-angle) - relative_y * sin(-angle);
-    float rotated_y = relative_x * sin(-angle) + relative_y * cos(-angle);
-
-    printf("Rotated Position: rotated_x = %f, rotated_y = %f\n", rotated_x, rotated_y);
-
-    // Avoid division by zero
-    if (rotated_y <= 0.1f) {
-        printf("Enemy behind player or too close to avoid projection issues.\n");
+    // Varmista, ettei vihollinen ole kameran takana
+    if (relative_y <= 0.1f) {
+        printf("Enemy behind camera or too close.\n");
         return;
     }
 
-    // Perspective projection to screen coordinates
-    int screen_x = (table->width / 2) + (int)((rotated_x / rotated_y) * 2);
-    int screen_y = (table->height / 2) - (int)(2 / rotated_y);
+    // Ruudun koordinaatit
+    int screen_x = (int)((relative_x / relative_y) * (table->width / 2)) + (table->width / 2);
+    int screen_y = (table->height / 2); // Kiinteä y-taso (ei korkeuseroja)
 
-    printf("Screen Position: screen_x = %d, screen_y = %d\n", screen_x, screen_y);
+	printf("Relative: x = %f, y = %f\n", relative_x, relative_y);
+	printf("Screen: x = %d\n", screen_x);
 
-    // Check if the enemy is out of bounds (not visible on screen)
-    if (screen_x < 0 || screen_x >= table->width || screen_y < 0 || screen_y >= table->height) {
-        printf("Enemy out of bounds, disabling rendering.\n");
-        return;
+
+    // Tarkista, onko vihollinen ruudulla
+    if (screen_x < 0 || screen_x >= table->width) {
+        printf("Enemy out of view.\n");
     }
 
-    // Update enemy sprite's position for all animation frames
+    // Päivitä vihollisen sprite
     int i = 4;
     while (i >= 0) {
         set_image_instance_pos(&table->e_img[i]->instances[0], screen_x, screen_y);
+        --i;
+    }
+}
+
+
+ void update_enemy_pos(t_table *table)
+{
+    // Vihollisen sijainti kartalla
+    float enemy_x = 3.0; // Kartan koordinaatit
+    float enemy_y = 1.0;
+
+    // Pelaajan sijainti kartalla
+    float player_map_x = table->player_x / T_SIZE;
+    float player_map_y = table->player_y / T_SIZE;
+
+    // Suhteellinen sijainti pelaajaan nähden
+    float relative_x = enemy_x - player_map_x;
+    float relative_y = enemy_y - player_map_y;
+
+    // Kulma viholliseen
+    float angle_to_enemy = atan2(relative_y, relative_x);
+
+    // Suhteellinen kulma pelaajaan nähden
+    float player_angle = deg_to_rad(table->player_angle); // Muunna asteet radiaaneiksi
+    float relative_angle = angle_to_enemy - player_angle;
+
+    // Kulman normalisointi -pi ja pi välillä
+    if (relative_angle > PI) relative_angle -= 2 * PI;
+    if (relative_angle < -PI) relative_angle += 2 * PI;
+
+    // Vihollisen ruutukoordinaatti (x)
+    float fov = deg_to_rad(60); // Näkökenttä (60 astetta radiaaneina)
+    int screen_x = (int)((relative_angle / fov) * (table->width / 2)) + (table->width / 2);
+
+    // Tarkista, onko vihollinen näkyvissä
+    if (screen_x < 0 || screen_x >= table->width) {
+        printf("Enemy is out of view.\n");
+    }
+
+    // Päivitä vihollisen sprite
+    int i = 4;
+    while (i >= 0) {
+        set_image_instance_pos(&table->e_img[i]->instances[0], screen_x, table->height / 2);
         --i;
     }
 }
@@ -174,12 +216,13 @@ void ft_hook(void* param)
 	{
 		new_x = table->player_x + table->player_delta_x_ad * 5;
 		new_y = table->player_y + table->player_delta_y_ad * 5;
-		int i = 4;
+		/* int i = 4;
 		while (i >= 0)
 		{
 			set_image_instance_pos(&table->e_img[i]->instances[0], table->e_img[i]->instances[0].x -= 55, table->e_img[i]->instances[0].y);
 			--i;
-		}	
+		}	 */
+		update_enemy_pos_straight(table);
 		//if (table->map[mpy][mpxcd] != '1')
 		if (!wall_collision_w_circular_bumper(table, new_x, table->player_y))
 			table->player_x = new_x;
@@ -192,12 +235,13 @@ void ft_hook(void* param)
 		new_x = table->player_x - table->player_delta_x_ad * 5;
 		new_y = table->player_y - table->player_delta_y_ad * 5;
 		//if (table->map[mpy][mpxca] != '1')
-		int i = 4;
+		/* int i = 4;
 		while (i >= 0)
 		{
 			set_image_instance_pos(&table->e_img[i]->instances[0], table->e_img[i]->instances[0].x += 55, table->e_img[i]->instances[0].y);
 			--i;
-		}	
+		}	 */
+		update_enemy_pos_straight(table);
 		if (!wall_collision_w_circular_bumper(table, new_x, table->player_y))
 			table->player_x = new_x;
 		//if (table->map[mpyca][mpx] != '1')
@@ -213,13 +257,14 @@ void ft_hook(void* param)
 		table->player_delta_y = sin((float)table->player_angle / 180 * PI);
 		table->player_delta_x_ad = cos((float)(table->player_angle + 90) / 180 * PI);
 		table->player_delta_y_ad = sin((float)(table->player_angle + 90) / 180 * PI);
-		int	i;
+		/* int	i;
 		i = 4;
 		while (i >= 0)
 		{
 			set_image_instance_pos(&table->e_img[i]->instances[0], table->e_img[i]->instances[0].x += 55, table->e_img[i]->instances[0].y);
 			--i;
-		}
+		} */
+		update_enemy_pos(table);
 	}
 	if (mlx_is_key_down(table->mlx_start, MLX_KEY_RIGHT))
 	{
@@ -230,13 +275,14 @@ void ft_hook(void* param)
 		table->player_delta_y = sin((float)table->player_angle / 180 * PI);
 		table->player_delta_x_ad = cos((float)(table->player_angle + 90) / 180 * PI);
 		table->player_delta_y_ad = sin((float)(table->player_angle + 90) / 180 * PI);
-		int	i;
+		/* int	i;
 		i = 4;
 		while (i >= 0)
 		{
 			set_image_instance_pos(&table->e_img[i]->instances[0], table->e_img[i]->instances[0].x -= 55, table->e_img[i]->instances[0].y);
 			--i;
-		}
+		} */
+		update_enemy_pos(table);
 	}
 	animate_enemy(table);
 	draw_minimap(table);
