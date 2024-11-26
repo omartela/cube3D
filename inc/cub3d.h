@@ -6,7 +6,7 @@
 /*   By: mpellegr <mpellegr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:20:06 by mpellegr          #+#    #+#             */
-/*   Updated: 2024/11/19 17:13:07 by mpellegr         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:55:53 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_table
 	uint32_t		**so_texture_colors;
 	uint32_t		**es_texture_colors;
 	uint32_t		**ws_texture_colors;
+	int				e_spawn_pos_x;
+	int				e_spawn_pos_y;
 }	t_table;
 
 void			init_data(t_table *table);
