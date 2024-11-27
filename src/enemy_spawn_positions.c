@@ -11,52 +11,33 @@
 /* ************************************************************************** */
 #include "../inc/cub3d.h"
 
-int	check_distance(t_table *table, int distance)
+int check_distance(t_table *table, int x, int y, int distance) 
 {
-	if (abs(table->player_x - table->e_spawn_pos_x) >= distance)
-		return (1);
-	if (abs(table->player_y - table->e_spawn_pos_y) >= distance)
-		return (1);
-	return (0);
+    return abs(table->player_col - x) >= distance || abs(table->player_row - y) >= distance;
 }
 
-void	calc_enemy_spawn_pos(t_table *table, int distance)
+void init_enemies(t_table *table) 
 {
-	if (table->map[table->e_spawn_pos_y][table->e_spawn_pos_x + 1] == 0)
-	{
-		if (check_distance(table, distance))
-			return ;
-		else
-			calc_enemy_spawn_pos(t_table *table, int distance)
-	}
-	if (table->map[table->e_spawn_pos_y][table->e_spawn_pos_x - 1] == 0)
-	{
-		if (check_distance(table, distance))
-			return ;
-		else
-			calc_enemy_spawn_pos(t_table *table, int distance)
+    size_t	x;
+	size_t	y;
 
-	}
-	if (table->map[table->e_spawn_pos_y - 1][table->e_spawn_pos_x] == 0)
+	x = 0;
+	y = 0;
+	while (y < table->rows)
 	{
-		if (check_distance(table, distance))
-			return ;
-		else
-			calc_enemy_spawn_pos(t_table *table, int distance)
+		x = 0;
+		while (x < table->columns)
+		{
+			if (table->map[y][x] == '0' && check_distance(table, x, y, 2))
+			{
+				printf("spawn position found \n");
+				table->e_spawn_pos_x = x * T_SIZE + T_SIZE/2;
+				table->e_spawn_pos_y = y * T_SIZE + T_SIZE/2;
+				return ;
+			}
+			++x;
+		}
+		++y;
 	}
-	if (table->map[table->e_spawn_pos_y + 1][table->e_spawn_pos_x] == 0)
-	{
-		if (check_distance(table, distance))
-			return ;
-		else
-			calc_enemy_spawn_pos(t_table *table, int distance)
-	}
-}
-
-
-void	init_calc_enemies(table *table)
-{
-	table->e_spawn_pos_x = table->player_x;
-	table->e_spawn_pos_y = table->player_y;
-	calc_enemy_spawn_pois(table, 5);
+	printf("No valid enemy spawn position found \n");
 }

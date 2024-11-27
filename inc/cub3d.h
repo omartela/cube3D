@@ -115,4 +115,7 @@ int	read_file(t_table *table);
 void	free_map(char **map, size_t i);
 void	free_table(char ***table);
 
+//enemy_spawn_positions.c
+void	init_enemies(t_table *table);
+
 #endif

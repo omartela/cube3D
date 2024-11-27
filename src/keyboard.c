@@ -6,7 +6,7 @@
 /*   By: mpellegr <mpellegr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 10:38:34 by mpellegr          #+#    #+#             */
-/*   Updated: 2024/11/19 17:09:32 by mpellegr         ###   ########.fr       */
+/*   Updated: 2024/11/27 08:36:48 by omartela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ int	wall_collision_w_circular_bumper(t_table *table, int new_x, int new_y)
 	}
 	return (0);
 }
-
+/*
 void	ft_enemy(void *param)
 {
 	t_table	*table;
 
 	table = (t_table *)param;
 	//animate_enemy(table);
-}
+}*/
 
 void update_enemy_pos(t_table *table)
 {

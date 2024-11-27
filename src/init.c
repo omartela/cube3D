@@ -22,5 +22,7 @@ void	init_data(t_table *table)
 	table->player_delta_y = sin((float)table->player_angle / 180 * PI);
 	table->player_delta_x_ad = cos((float)(table->player_angle + 90) / 180 * PI);
 	table->player_delta_y_ad = sin((float)(table->player_angle + 90) / 180 * PI);
+	table->e_spawn_pos_x = 0;
+	table->e_spawn_pos_y = 0;
 
 }
