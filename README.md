@@ -238,7 +238,7 @@ This project is part of the 42 School curriculum. Please respect the academic in
 
 ## 📞 Contact
 
-- **Authors**: omartela, mpellegr, giuls
+- **Authors**: omartela, mpellegr
 - **Institution**: 42 School / Hive Helsinki
 - **Project Repository**: [https://github.com/omartela/cube3D](https://github.com/omartela/cube3D)
 
