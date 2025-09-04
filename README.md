@@ -1,10 +1,10 @@
-# Cube3D - 3D Raycasting Game Engine
+# Cube3D - 3D Raycasting Game
 
 ![C](https://img.shields.io/badge/C-00599C?style=flat-square&logo=c&logoColor=white)
 ![OpenGL](https://img.shields.io/badge/OpenGL-5586A4?style=flat-square&logo=opengl&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
 
-**Cube3D** is a 3D raycasting game engine inspired by the classic Wolfenstein 3D. This project implements a 3D perspective rendering engine using raycasting techniques, creating a pseudo-3D environment from a 2D map. Built as part of the 42 School curriculum, it features textured walls, sprites, collision detection, and an interactive game environment.
+**Cube3D** is a 3D raycasting game inspired by the classic Wolfenstein 3D. This project implements a 3D perspective rendering using raycasting techniques, creating a pseudo-3D environment from a 2D map. Built as part of the 42 School curriculum, it features textured walls, sprites, collision detection, and an interactive game environment.
 
 ## 🎮 Features
 
