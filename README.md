@@ -16,7 +16,6 @@
 - **Mini-map**: 2D overhead view of the current level
 - **Main Menu**: Intuitive main menu with options and controls
 - **Attack System**: Combat mechanics with weapon animations
-- **Sound Effects**: Audio feedback for actions and events
 - **Custom Map Format**: Support for .cub map files
 
 ## 🚀 Getting Started
